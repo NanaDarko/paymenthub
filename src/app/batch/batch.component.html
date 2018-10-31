@@ -1,0 +1,47 @@
+<div class="container">
+
+  <div class="card">
+    <div class="card-header">
+      <div class="row d-flex justify-content-center">
+        <div class="col-md-8">
+          <h5 style="text-align:center">Batch Transactions</h5>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end">
+          <button (click)="gotoAddBatch()" class="btn btn-primary">Add New Batch</button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body table-responsive">
+      <div *ngIf="errorFlag" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{errorMsg}}</strong>
+        <button type="button" (click)="resetErrorFlag()" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <table id="mydatatable" class="table table-dark table-hover table-striped" datatable [dtTrigger]="dtTrigger">
+        <thead class="thead-light">
+          <tr>
+            <th>Batch Name</th>
+            <th>Date</th>
+            <th>Total Sum</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of items">
+            <td>{{item?.name}}</td>
+            <td>{{item?.date | date:'mediumDate'}}</td>
+            <td>{{item?.checkSum}}</td>
+            <td>{{item?.totalAmout}}</td>
+            <td>{{item?.status}}</td>
+            <td>
+              <button class="btn btn-default" (click)="Onselect(item)"> Details</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

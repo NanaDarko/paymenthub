@@ -1,0 +1,99 @@
+<div class="row d-flex justify-content-center pt-5">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title">Add Contact</h5>
+      </div>
+      <div class="card-body">
+        <div *ngIf="errorMsg" class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>{{errorMsg}}</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div *ngIf="response && !errorMsg" class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong> success!</strong>
+          <button type="button" (click)="resetResponse()" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <form #userForm="ngForm" (ngSubmit)="onSubmit(userForm)" novalidate>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Name</label>
+                <input type="text" required #name="ngModel" [class.is-invalid]="name.invalid && name.touched" name="name"
+                  class="form-control" [(ngModel)]="userModel.name">
+                <div *ngIf="name.errors && (name.invalid || name.touched)">
+                  <small class="text-danger" *ngIf="name.errors.required && name.touched">Name is required</small>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="text" email required #email="ngModel" name="email" [class.is-invalid]="email.touched  && (email.errors || email.invalid)"
+                  class="form-control" [(ngModel)]="userModel.email">
+                <small class="text-danger" *ngIf="email.invalid && email.errors?.required && email.touched">Email is
+                  required</small>
+                <small class="text-danger" *ngIf="email.errors?.email && email.invalid && !email.errors?.required && email.touched">Email
+                  is not valid</small>
+              </div>
+              <div class="form-group">
+                <label>Phone</label>
+                <input type="tel" required pattern="^\d{10}$" #phone="ngModel" [class.is-invalid]="phone.invalid && phone.touched"
+                  name="phone" class="form-control" [(ngModel)]="userModel.phoneNumber">
+                <div *ngIf="phone.errors && (phone.invalid || phone.touched)">
+                  <small class="text-danger" *ngIf="phone.errors.required && phone.touched">Phone is required</small>
+                  <small class="text-danger" *ngIf="phone.errors.pattern">Phone must be 10 digits </small>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Contact Type</label>
+                <select #TypeId="ngModel" selectOptionValidator="default" required [class.is-invalid]="TypeId.errors?.defaultSelected && TypeId.touched"
+                  class="custom-select" name="TypeId" [(ngModel)]="userModel.TypeId">
+                  <option selected value="default">--Select Type--</option>
+                  <option *ngFor="let type of Types" [value]="type?.id">{{type?.name}}</option>
+                </select>
+                <small class="text-danger" [class.d-none]="!TypeId.errors?.defaultSelected || TypeId.untouched">Please
+                  select a Contact Type</small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Bank</label>
+                <select #BankId="ngModel" selectOptionValidator="default" required [class.is-invalid]="BankId.errors?.defaultSelected && BankId.touched"
+                  class="custom-select" name="BankId" [(ngModel)]="userModel.BankId">
+                  <option selected value="default">--Select Bank--</option>
+                  <option *ngFor="let bank of Banks" [value]="bank?.id">{{bank?.name}}</option>
+                </select>
+                <small class="text-danger" [class.d-none]="!BankId.errors?.defaultSelected || BankId.untouched">Please
+                  select a Bank</small>
+              </div>
+              <div class="form-group">
+                <label>Branch</label>
+                <input type="text" required #Branch="ngModel" [class.is-invalid]="Branch.invalid && Branch.touched"
+                  name="Branch" class="form-control" [(ngModel)]="userModel.Branch">
+                <small class="text-danger" [class.d-none]="Branch.valid || Branch.untouched">Branch is required</small>
+              </div>
+              <div class="form-group">
+                  <label>Account Number</label>
+                  <input type="text" required #AccountNumber="ngModel" [class.is-invalid] = "AccountNumber.invalid && AccountNumber.touched" name="AccountNumber" class="form-control" [(ngModel)]="userModel.AccountNumber">
+                  <small class="text-danger" [class.d-none]="AccountNumber.valid || AccountNumber.untouched" >Account Number is required</small>
+                </div>
+              <div class="form-group">
+                  <label>Comment</label>
+                  <input type="text" required #Comment="ngModel" [class.is-invalid]="Comment.invalid && Comment.touched" name="Comment"
+                    class="form-control" [(ngModel)]="userModel.Comment">
+                  <small class="text-danger" [class.d-none]="Comment.valid || Comment.untouched">Comment is required</small>
+                </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button [disabled]="userForm.form.invalid" class="btn btn-primary" type="submit">Submit</button>
+            <button class="btn btn-default" (click)="gotoContacts()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

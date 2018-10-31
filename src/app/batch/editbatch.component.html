@@ -1,0 +1,69 @@
+<div class="row d-flex justify-content-center pt-5">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title">Edit {{clonedBatch.name}} Batch</h5>
+      </div>
+      <div class="card-body">
+        <div *ngIf="errorFlag" class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>{{errorMsg}}</strong>
+          <button (click)="resetErrorFlag()" type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div *ngIf="amountFlag" class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>{{amountValidatorMsg}}</strong>
+          <button type="button" (click)="resetAmountMsg()" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form #editBatchForm="ngForm" novalidate>
+          {{editBatchForm.form.valid}}
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" required #name="ngModel" [class.is-invalid]="name.invalid && name.touched" name="name"
+              class="form-control" [(ngModel)]="clonedBatch.name">
+            <div *ngIf="name.errors && (name.invalid || name.touched)">
+              <small class="text-danger" *ngIf="name.errors.required && name.touched">Name is required</small>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" required #date="ngModel" [class.is-invalid]="date.invalid && date.touched" name="date"
+              class="form-control" [(ngModel)]="clonedBatch.date">
+            <div *ngIf="date.errors && (date.invalid || date.touched)">
+              <small class="text-danger" *ngIf="date.errors.required && date.touched">Date is required</small>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="label-control">Checksum</label>
+            <div class="input-group ">
+              <div class="input-group-prepend">
+                <span class="input-group-text">GHC</span>
+              </div>
+              <input type="number" required #checkSum="ngModel" [class.is-invalid]="checkSum.invalid && checkSum.touched"
+                name="checkSum" class="form-control" [(ngModel)]="clonedBatch.checkSum">
+            </div>
+            <small class="text-danger" [class.d-none]="checkSum.valid || checkSum.untouched">CheckSum is required</small>
+          </div>
+          <div class="form-group">
+            <label class="label-control">Total Amount</label>
+            <div class="input-group ">
+              <div class="input-group-prepend">
+                <span class="input-group-text">GHC</span>
+              </div>
+              <input type="text" required #totalAmount="ngModel" [class.is-invalid]="totalAmount.invalid && totalAmount.touched"
+                name="totalAmount" class="form-control" [(ngModel)]="clonedBatch.totalAmout" readonly>
+            </div>
+            <small class="text-danger" [class.d-none]="totalAmount.valid || totalAmount.untouched">totalAmount is
+              required</small>
+          </div>
+        </form>
+      </div>
+      <div class="card-footer d-flex justify-content-end">
+        <button (click)="backToBatch()" class="btn btn-default">Cancel</button>
+        <button [disabled]="editBatchForm.form.invalid" (click)="onSubmit()" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

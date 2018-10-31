@@ -1,0 +1,40 @@
+<div class="py-5">
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <!-- <span class="anchor" id="formLogin"></span> -->
+
+      <!-- form card login -->
+      <div class="card rounded-0">
+          <div *ngIf="errorFlag" class="alert alert-warning alert-dismissible fade show" role="alert">
+              <strong>{{errorMsg}}</strong>
+              <button type="button" (click)="resetErrorFlag()" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+        <div class="card-header">
+          <h3 class="mb-0">Login</h3>
+        </div>
+        <div class="card-body">
+          <form class="form" #loginForm="ngForm" (ngSubmit)="loginUser()" novalidate>
+            <div class="form-group">
+              <label >User Name</label>
+              <input type="text" [class.is-invalid] = "userName.invalid && userName.touched"  #userName="ngModel" [(ngModel)]="userData.userName" name="userName" class="form-control rounded-0" required>
+              <small class="text-danger" [class.d-none]="userName.valid || userName.untouched" >User Name is required</small>
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" [class.is-invalid] = "password.invalid && password.touched"  #password="ngModel" [(ngModel)]="userData.password" name="password" class="form-control rounded-0"  required>
+              <small class="text-danger" [class.d-none]="password.valid || password.untouched" >Password is required</small>
+            </div>
+            <button type="submit" [disabled]="loginForm.form.invalid" class="btn btn-primary float-right">Login</button>
+          </form>
+        </div>
+        <!--/card-block-->
+      </div>
+      <!-- /form card login -->
+
+    </div>
+
+
+  </div>
+</div>

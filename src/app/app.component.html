@@ -1,0 +1,58 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <span class="navbar-brand">GHIPPS</span>
+  <button  class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a *ngIf="_accountService.loggedIn()" class="nav-link" routerLink="/contact" routerLinkActive="active">Contact</a>
+      </li>
+      <li class="nav-item dropdown" *ngIf="_accountService.loggedIn()">
+        <a   class="nav-link dropdown-toggle" href="#" id="batchesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Batch Transactions
+        </a>
+        <div class="dropdown-menu" aria-labelledby="batchesDropdown">
+          <a *ngIf="_accountService.loggedIn() && (_accountService.IsApprover() || _accountService.IsAdmin())" class="dropdown-item" routerLink="/authorization" routerLinkActive="active">Authorization</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" routerLink="/batch" routerLinkActive="active">Batches</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown" *ngIf="_accountService.loggedIn()">
+        <a   class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Setup
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" routerLink="/bank" routerLinkActive="active">Banks</a>
+          <a class="dropdown-item" routerLink="/approvertypes" routerLinkActive="active">Approver Types</a>
+          <!--<div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a> -->
+        </div>
+      </li>
+      <li class="nav-item dropdown" *ngIf="_accountService.loggedIn() && _accountService.IsAdmin()">
+        <a   class="nav-link dropdown-toggle" href="#" id="managerDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Manage Users
+        </a>
+        <div class="dropdown-menu" aria-labelledby="managerDropdown">
+          <a class="dropdown-item" routerLink="/register" routerLinkActive="active">Register User</a>
+          <a class="dropdown-item" routerLink="/manager" routerLinkActive="active">Role Management</a>
+        </div>
+      </li>
+    </ul>
+    <ul class="navbar-nav">
+      <li *ngIf="_accountService.loggedIn()" class="nav-item dropdown">
+        <a   class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{userName}}
+        </a>
+        <div class="dropdown-menu account-dropdown-menu" aria-labelledby="accountDropdown">
+          <a class="dropdown-item" style="cursor:pointer" (click)="_accountService.logout()">Logout</a>
+          <a class="dropdown-item" routerLink="/changepassword" routerLinkActive="active">Change Password</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>    
+<div class="container">
+  <router-outlet></router-outlet>            
+</div>

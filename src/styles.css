@@ -1,0 +1,22 @@
+/* You can add global styles to this file, and also import other style files */
+
+@media (min-width: 576px){
+    .EditContact-dialog {
+        max-width: 60em;
+        margin: 1.75rem auto;
+    }
+}
+
+ .table-dark.table-striped tbody tr:nth-of-type(even) {
+    background-color: rgba(255,255,255,.01)! important;
+}
+
+body{
+    font-family: 'Raleway', sans-serif;
+    font-size: 15px;
+}
+
+.account-dropdown-menu {
+    right: 0 !important;
+    left: auto !important;
+}

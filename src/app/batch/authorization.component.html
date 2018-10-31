@@ -1,0 +1,89 @@
+<div class="container">
+
+  <div class="card">
+    <div class="card-header">
+      <h5 style="text-align:center">Authorization of Batch Transactions</h5>
+    </div>
+    <div class="card-body table-responsive">
+      <div *ngIf="errorMsg" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{errorMsg}}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div *ngIf="response" class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong> Authhorization was successful!</strong>
+        <button type="button" (click)="resetResponse()" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <table id="mydatatable" class="table table-dark table-hover table-striped" datatable [dtTrigger]="dtTrigger">
+        <thead class="thead-light">
+          <tr>
+            <th>Batch Name</th>
+            <th>Date</th>
+            <th>Total Sum</th>
+            <th>Total Amount</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of items">
+            <td>{{item?.name}}</td>
+            <td>{{item?.date | date:'mediumDate'}}</td>
+            <td>GHC {{item?.checkSum}}</td>
+            <td>GHC {{item?.totalAmout}}</td>
+            <td>
+              <button class="btn btn-primary" (click)="Onselect(item)"> Details</button>
+            </td>
+            <td>
+              <button [disabled]="!(item?.checkSum === item?.totalAmout) || !_accountService.IsApprover() || sumLimit < item.checkSum"
+                class="btn btn-default" (click)="LogInToApprove(item)" data-toggle="modal" data-target="#loginModal"> Authorize</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- Login Modal -->
+<div class="modal fade"  data-backdrop="static" data-keyboard="false" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Authorize Batch</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row d-flex justify-content-center">
+          <div class="col-md-10">
+            <form class="form" #loginForm="ngForm" novalidate>
+              <div class="form-group">
+                <label>User Name</label>
+                <input type="text" [class.is-invalid]="userName.invalid && userName.touched" #userName="ngModel"
+                  [(ngModel)]="userData.userName" name="userName" class="form-control rounded-0" required>
+                <small class="text-danger" [class.d-none]="userName.valid || userName.untouched">User Name is required</small>
+              </div>
+              <div class="form-group">
+                <label>Password</label>
+                <input type="password" [class.is-invalid]="password.invalid && password.touched" #password="ngModel"
+                  [(ngModel)]="userData.password" name="password" class="form-control rounded-0" required>
+                <small class="text-danger" [class.d-none]="password.valid || password.untouched">Password is required</small>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button (click)="ApproveBatch()" [disabled]="loginForm.form.invalid" data-dismiss="modal" type="button" class="btn btn-primary">Authorize</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

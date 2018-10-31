@@ -1,0 +1,165 @@
+<div class="row d-flex justify-content-center pt-5">
+  <div class="col-md-12 col-lg-12">
+    <div *ngIf="errorMsg" class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>{{errorMsg}}</strong>
+      <button type="button" (click)="resetErrorMsg()" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div *ngIf="response" class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong> Authhorization was successful!</strong>
+      <button type="button" (click)="resetResponse()" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="card">
+      <div class="card-header ">
+        <h2 style="text-align:center">{{batch?.name}}</h2>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <h5>Name: {{batch?.name}}</h5>
+          </div>
+          <div class="col-md-6">
+            <h5>Date: {{batch?.date | date:'mediumDate'}}</h5>
+          </div>
+          <div class="col-md-6">
+            <h5>Checksum: GHC {{batch?.checkSum}}</h5>
+          </div>
+          <div class="col-md-6">
+            <h5>TotalAmount: GHC {{batch?.totalAmout}}</h5>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body table-responsive">
+            <table class="table table-striped ">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Account Number</th>
+                  <th>Bank</th>
+                  <th>Branch</th>
+                  <th>Amount</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of batch.batchTransactions">
+                  <td>{{item?.contact?.name}}</td>
+                  <td>{{item?.contact?.accountNumber}}</td>
+                  <td>{{item?.contact?.bank?.name}}</td>
+                  <td>{{item?.contact?.branch}}</td>
+                  <td>GHC {{item?.amount}}</td>
+                  <td>
+                    <button (click)="transactionDetails(item)" type="button" class="btn btn-primary" data-toggle="modal"
+                      data-target="#tdModal">
+                      Details
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+      <div class="card-footer">
+        <button [disabled]="!(batch?.checkSum === batch?.totalAmout) || !_accountService.IsApprover() || 
+        sumLimit < batch.checkSum"
+          class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
+          Authorize</button>
+        <button class="btn btn-default float-right" (click)="gotoAuthorization()"> Back</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Transaction Detail Modal -->
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="tdModal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered addmodal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Transaction Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <strong>Paid To:</strong> {{transaction?.contact?.name}}
+          </div>
+          <div class="col-md-12">
+            <strong>Bank:</strong> {{transaction?.contact?.bank?.name}}
+          </div>
+          <div class="col-md-12">
+            <strong>Branch:</strong> {{transaction?.branch}}
+          </div>
+          <div class="col-md-12">
+            <strong>Account Number:</strong> {{transaction?.contact?.accountNumber}}
+          </div>
+          <div class="col-md-12">
+            <strong>Amount:</strong> GHC {{transaction?.amount}}
+          </div>
+          <div class="col-md-12">
+            <strong>Date Of Payment:</strong> {{transaction?.date | date:'mediumDate'}}
+          </div>
+          <div class="col-md-12">
+            <strong>Contact:</strong> {{transaction?.contact?.phoneNumber}} {{transaction?.contact?.email}}
+          </div>
+          <div class="col-md-12">
+            <strong>Comment:</strong> {{transaction?.comments}}
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Login Modal -->
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="loginModal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Authorize Batch</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row d-flex justify-content-center">
+          <div class="col-md-10">
+            <form class="form" #loginForm="ngForm" novalidate>
+              <div class="form-group">
+                <label>User Name</label>
+                <input type="text" [class.is-invalid]="userName.invalid && userName.touched" #userName="ngModel"
+                  [(ngModel)]="userData.userName" name="userName" class="form-control rounded-0" required>
+                <small class="text-danger" [class.d-none]="userName.valid || userName.untouched">User Name is required</small>
+              </div>
+              <div class="form-group">
+                <label>Password</label>
+                <input type="password" [class.is-invalid]="password.invalid && password.touched" #password="ngModel"
+                  [(ngModel)]="userData.password" name="password" class="form-control rounded-0" required>
+                <small class="text-danger" [class.d-none]="password.valid || password.untouched">Password is required</small>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button (click)="authorizeBatch(); loginForm.reset()" data-dismiss="modal" [disabled]="loginForm.form.invalid"
+          type="button" class="btn btn-primary">Authorize</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

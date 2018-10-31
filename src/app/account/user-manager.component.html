@@ -1,0 +1,107 @@
+<div class="row d-flex justify-content-center pt-5">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title">Manage User</h5>
+      </div>
+      <div class="card-body">
+        <div *ngIf="errorFlag" class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>{{errorMsg}}</strong>
+          <button type="button" (click)="resetErrorFlag" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div *ngIf="successFlag" class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong> {{successMsg}}</strong>
+          <button type="button" (click)="resetSuccessFlag()" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <ul class="nav nav-tabs nav-justified">
+          <li class="nav-item"><a (click)="cancelApproverAssignment(); approverForm.reset()" class="nav-link active" data-toggle="tab" href="#role">Role Manager</a></li>
+          <li class="nav-item"><a (click)="cancelRoleAssignment(); searchForm.reset()" class="nav-link" data-toggle="tab" href="#approver">Approver type Manager</a></li>
+        </ul>
+        <div class="tab-content">
+          <div id="role" class="tab-pane active">
+            <br/>
+            <form #searchForm="ngForm" novalidate>
+              <div class="row d-flex justify-content-center">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" required #userName="ngModel" [class.is-invalid]="userName.invalid && userName.touched" name="userName"
+                      class="form-control" [(ngModel)]="userInfo.userName">
+                    <div *ngIf="userName.errors && (userName.invalid || userName.touched)">
+                      <small class="text-danger" *ngIf="userName.errors.required && userName.touched">Username is required</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-end">
+                <button (click)="searchUser(true)" [disabled]="searchForm.form.invalid" class="btn btn-primary">Search</button>
+              </div>
+            </form>
+
+            <form *ngIf="roleFlag" #userRoleForm="ngForm" novalidate>
+              <div class="row d-flex justify-content-center">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Role</label>
+                    <select #role="ngModel" selectOptionValidator="default" required [class.is-invalid]="role.errors?.defaultSelected && role.touched"
+                      class="custom-select" name="role" [(ngModel)]="userInfo.roles">
+                      <option selected value="default">--Select Role--</option>
+                      <option *ngFor="let role of Roles" [value]="role.name">{{role?.name}}</option>
+                    </select>
+                    <small class="text-danger" [class.d-none]="!role.errors?.defaultSelected || role.untouched">Please
+                      select Role</small>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-end">
+                <button (click)="assignRole(searchForm, userRoleForm)" [disabled]="userRoleForm.form.invalid" class="btn btn-primary">Save</button>
+                <button (click)="cancelRoleAssignment(); searchForm.reset(); userRoleForm.reset()" class="btn btn-default">Cancel</button>
+              </div>
+            </form>
+          </div>
+          <div id="approver" class="tab-pane fade container">
+            <br/>
+            <form #approverForm="ngForm" novalidate>
+              <div class="row d-flex justify-content-center">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" required #name="ngModel" [class.is-invalid]="name.invalid && name.touched" name="name"
+                      class="form-control" [(ngModel)]="assignApprover.userName">
+                    <div *ngIf="name.errors && (name.invalid || name.touched)">
+                      <small class="text-danger" *ngIf="name.errors.required && name.touched">Username is required</small>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-end">
+                      <button (click)="searchUser(false)" [disabled]="name.invalid || name.untouched" class="btn btn-primary">Search</button>
+                  </div>
+
+                  <div *ngIf="approverFlag" class="form-group">
+                    <label>Approver Type</label>
+                    <select #approverType="ngModel" selectOptionValidator="default" required [class.is-invalid]="approverType.errors?.defaultSelected && approverType.touched"
+                      class="custom-select" name="approverType" [(ngModel)]="assignApprover.typeId">
+                      <option selected value="default">--Select ApproverType--</option>
+                      <option *ngFor="let type of ApproverTypes" [value]="type?.id">{{type?.name}}</option>
+                    </select>
+                    <small class="text-danger" [class.d-none]="!approverType.errors?.defaultSelected || approverType.untouched">Please
+                      select a Approver Type</small>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="approverFlag" class="d-flex justify-content-end">
+                <button (click)="assignApproverType(approverForm)" [disabled]="approverForm.form.invalid" class="btn btn-primary">Save</button>
+                <button (click)="cancelApproverAssignment(); approverForm.reset()" class="btn btn-default">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        
+      </div>
+    </div>
+  </div>
+</div>

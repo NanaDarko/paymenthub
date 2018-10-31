@@ -1,0 +1,147 @@
+<div class="container">
+
+  <div class="card">
+    <div class="card-header">
+      <div class=" row ">
+        <div class="col-md-8 d-flex justify-content-start ">
+          <h5 style="text-align:center">Approver Type Setup</h5>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end">
+          <button data-toggle="modal" data-target="#addModal" type="button" class="btn btn-primary">
+            Add New Approver Type
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body table-responsive">
+      <h5 class="card-title">Approver Types List</h5>
+      <div *ngIf="errorFlag" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{errorMsg}}</strong>
+        <button (click)="resetErrorFlag()" type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div *ngIf="successFlag" class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong> {{successMsg}}</strong>
+        <button (click)="resetSuccessFlag()" type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <table id="mydatatable" class="table table-dark table-hover table-striped" datatable [dtTrigger]="dtTrigger">
+        <thead class="thead-light">
+          <tr>
+            <th>Name</th>
+            <th>Sum Limit</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of items">
+            <td>{{item.name}}</td>
+            <td>{{item.sumLimit}}</td>
+            <td>
+                <button [swal]="deleteSwal" class="btn btn-danger">Delete</button>
+                <swal #deleteSwal title="Confirm Delete {{item.name}}?" text="This cannot be undone!" type="question"
+                  [showCancelButton]="true" [focusCancel]="true" (confirm)="Delete(item)">
+                </swal>
+            </td>
+            <td>
+              <button class="btn btn-primary" (click)="Onselect(item)" data-toggle="modal" data-target="#editModal"> Details</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Edit Approver Type {{model.name}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-10">
+                <form #formitem="ngForm" novalidate>
+                  <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" required #name="ngModel" [class.is-invalid]="name.invalid && name.touched" name="name"
+                      class="form-control" [(ngModel)]="model.name">
+                    <small class="text-danger" [class.d-none]="name.valid || name.untouched">Name is required</small>
+                  </div>
+                  <div class="form-group">
+                    <label class="label-control">Sum Limit</label>
+                    <div class="input-group ">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">GHC</span>
+                      </div>
+                      <input type="number" required #sumLimit="ngModel" [class.is-invalid]="sumLimit.invalid && sumLimit.touched"
+                        name="sumLimit" class="form-control" [(ngModel)]="model.sumLimit">
+    
+                    </div>
+                    <small class="text-danger" [class.d-none]="sumLimit.valid || sumLimit.untouched">Sum Limit is required</small>
+                  </div>
+                </form>
+              </div>
+            </div>
+    
+          </div>
+        <div class="modal-footer">
+          <button (click)="saveUpdate()" [disabled]="formitem.form.invalid" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Add New Modal -->
+<div class="modal fade" id="addModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Add New Approver Type</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-10">
+                <form #addform="ngForm" novalidate>
+                  <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" required #newname="ngModel" [class.is-invalid]="newname.invalid && newname.touched"
+                      name="newname" class="form-control" [(ngModel)]="data.name">
+                    <small class="text-danger" [class.d-none]="newname.valid || newname.untouched">Name is required</small>
+                  </div>
+                  <div class="form-group">
+                    <label class="label-control">Sum Limit</label>
+                    <div class="input-group ">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">GHC</span>
+                      </div>
+                      <input type="number" required #sum="ngModel" [class.is-invalid]="sum.invalid && sum.touched" name="sum"
+                        class="form-control" [(ngModel)]="data.sumLimit">
+                    </div>
+                    <small class="text-danger" [class.d-none]="sum.valid || sum.untouched">Sum Limit is required</small>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        <div class="modal-footer">
+          <button (click)="postApproverType(addform)" [disabled]="addform.form.invalid" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>

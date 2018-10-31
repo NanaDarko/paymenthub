@@ -1,0 +1,131 @@
+<div class="container">
+
+  <div class="card">
+      <div class="card-header">
+          <div class=" row ">
+              <div class="col-md-8 d-flex justify-content-start ">
+                  <h5 style="text-align:center">Bank Setup</h5>
+              </div>
+              <div class="col-md-4 d-flex justify-content-end">
+                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBankModal">
+                   Add New Bank
+                 </button>
+              </div>
+            </div>
+      </div>
+      <div class="card-body">
+        <div *ngIf="errorFlag" class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>{{errorMsg}}</strong>
+          <button (click)="resetErrorFlag()" type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div *ngIf="successFlag" class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong> {{successMsg}}</strong>
+            <button (click)="resetSuccessFlag()" type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <table id="mydatatable" class="table table-dark table-hover table-striped" datatable [dtTrigger]="dtTrigger">
+            <thead class="thead-light">
+            <tr>
+              <th>Id</th>
+              <th>Name</th> 
+              <th></th>        
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of items">
+              <td>{{item.id}}</td>
+              <td>{{item.name}}</td>  
+              <td>
+                <button class="btn btn-primary" (click)="Onselect(item)" data-toggle="modal" data-target="#editBankModal"> Details</button>
+                <button [swal]="deleteSwal" class="btn btn-danger">Delete</button>
+                <swal #deleteSwal
+                  title="Confirm Delete {{item.name}}?"
+                  text="This cannot be undone!"
+                  type="question"
+                  [showCancelButton]="true"
+                  [focusCancel]="true"
+                  (confirm)="Delete(item)">
+                </swal>
+              </td>        
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>  
+</div>
+
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editBankModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title">Edit {{model.name}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <div class="row d-flex justify-content-center">
+                  <div class="col-md-10">
+                      <form #formitem="ngForm" novalidate>
+                        <div class="form-group">
+                          <label>Id</label>
+                          <input type="text" required #id="ngModel" [class.is-invalid] = "id.invalid && id.touched" name="id" class="form-control" readonly [(ngModel)]="model.id">
+                          <small class="text-danger" [class.d-none]="id.valid || id.untouched" >Id is required</small>
+                        </div>
+                        <div class="form-group">
+                          <label>Name</label>
+                          <input type="text" required   #name="ngModel" [class.is-invalid] = "name.invalid && name.touched" name="name" class="form-control" [(ngModel)]="model.name">
+                          <small class="text-danger" [class.d-none]="name.valid || name.untouched" >Name is required</small>
+                        </div>
+                      </form>
+                  </div>
+              </div>
+  
+          </div>
+          <div class="modal-footer">
+            <button (click)="saveUpdate()" [disabled]="formitem.form.invalid" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  <!-- Add New Modal -->
+
+  <div class="modal fade" data-backdrop="static" data-keyboard="false" id="addBankModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title">Add New Bank</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <div class="row d-flex justify-content-center">
+                  <div class="col-md-10">
+                      <form #addform="ngForm"  (ngSubmit)="onSubmit()" novalidate>
+                        <div class="form-group">
+                          <label>Name</label>
+                          <input type="text" required   #newname="ngModel" [class.is-invalid] = "newname.invalid && newname.touched" name="newname" class="form-control" [(ngModel)]="data.name">
+                          <small class="text-danger" [class.d-none]="newname.valid || newname.untouched" >Name is required</small>
+                        </div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button (click)="postBank()" [disabled]="addform.form.invalid" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>   
+
+      
